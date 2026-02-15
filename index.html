@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tuesday 3PM 🎬</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+overflow: hidden;
+  font-family:"Poppins",sans-serif;
+  height:100vh;
+  background:black;
+  color:white;
+}
+
+/* CURTAINS */
+.curtain{
+  position:fixed;
+  top:0;
+  width:50%;
+  height:100%;
+  background:linear-gradient(90deg,#7b0000,#b30000);
+  z-index:10;
+  transition:1.5s ease;
+}
+
+.left{left:0;}
+.right{right:0;}
+
+.open .left{transform:translateX(-100%);}
+.open .right{transform:translateX(100%);}
+
+/* PAGES */
+.page{
+    position: absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+  opacity:0;
+  transition:1s ease;
+}
+
+.page.active{opacity:1;}
+
+h1{
+  font-family:"Playfair Display",serif;
+  font-size:38px;
+  margin-bottom:20px;
+}
+
+p{
+  font-size:18px;
+  max-width:600px;
+  margin-bottom:30px;
+  opacity:0.85;
+}
+
+button{
+  padding:14px 32px;
+  border:none;
+  border-radius:40px;
+  font-size:16px;
+  cursor:pointer;
+  margin:10px;
+  transition:0.3s;
+  z-index: 1;
+}
+
+.primary{
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
+  color:white;
+}
+
+.primary:hover{transform:scale(1.1);}
+
+.secondary{
+  background:white;
+  color:#333;
+}
+
+.secondary:hover{transform:scale(1.1);}
+
+/* TICKET */
+.ticket{
+  background:white;
+  color:#333;
+  padding:35px;
+  border-radius:20px;
+  width:350px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+  from{box-shadow:0 0 15px rgba(0,114,255,0.6);}
+  to{box-shadow:0 0 35px rgba(0,114,255,1);}
+}
+
+.countdown{
+  margin-top:20px;
+  font-size:18px;
+}
+
+/* PARTICLES */
+.particle{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:white;
+  border-radius:50%;
+  opacity:0.4;
+  animation:float 8s linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Curtains -->
+<div class="curtain left"></div>
+<div class="curtain right"></div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="page1">
+  <h1>🎬 Welcome Samo</h1>
+  <p>
+    The theater is ready.<br>
+    The screen is waiting.<br><br>
+    Tuesday. 3:00 PM.
+  </p>
+  <button class="primary" onclick="nextPage(2)">Enter Theater</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <h1>Mission: Cinema</h1>
+  <p>
+    One afternoon.<br>
+    One movie.<br>
+    Zero stress.<br><br>
+    Just a chill Tuesday plan.
+  </p>
+  <button class="primary" onclick="nextPage(3)">Continue</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+  <h1>Final Decision</h1>
+  <p>
+    Samo…<br>
+    Are you in for Tuesday 3PM?
+  </p>
+
+  <button class="primary" onclick="accept()">I'm In 🎟️</button>
+  <button class="secondary" id="noBtn">Let me escape 😅</button>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page" id="page4">
+  <div class="ticket">
+    <h2>🎟️ Ticket Activated</h2>
+    <p><strong>Name:</strong> Samo</p>
+    <p><strong>Date:</strong> Tuesday</p>
+    <p><strong>Time:</strong> 3:00 PM</p>
+    <p><strong>Status:</strong> Confirmed</p>
+  </div>
+
+  <div class="countdown" id="countdown"></div>
+</div>
+
+<script>
+
+/* OPEN CURTAINS + REMOVE THEM */
+window.onload=()=>{
+  setTimeout(()=>{
+    document.body.classList.add("open");
+
+    // REMOVE curtains after animation so they don't block clicks
+    setTimeout(()=>{
+      document.querySelectorAll(".curtain").forEach(c=>c.remove());
+    },1600);
+
+  },500);
+
+  // Create floating particles
+  for(let i=0;i<40;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*100+"vw";
+    p.style.animationDuration=(5+Math.random()*5)+"s";
+    document.body.appendChild(p);
+  }
+};
+
+function nextPage(num){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page"+num).classList.add("active");
+}
+
+const noBtn=document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseenter",()=>{
+  noBtn.style.position="absolute";
+  noBtn.style.left=Math.random()*70+"%";
+  noBtn.style.top=Math.random()*70+"%";
+});
+
+function accept(){
+  confetti({
+    particleCount:250,
+    spread:140,
+    origin:{y:0.6}
+  });
+
+  document.body.style.background="#050505";
+  nextPage(4);
+  startCountdown();
+}
+
+function startCountdown(){
+  const countdownEl=document.getElementById("countdown");
+
+  const target=new Date();
+  target.setDate(target.getDate()+((2+7-target.getDay())%7));
+  target.setHours(15,0,0,0);
+
+  setInterval(()=>{
+    const now=new Date();
+    const diff=target-now;
+
+    const d=Math.floor(diff/(1000*60*60*24));
+    const h=Math.floor((diff/(1000*60*60))%24);
+    const m=Math.floor((diff/1000/60)%60);
+    const s=Math.floor((diff/1000)%60);
+
+    countdownEl.innerHTML=`⏳ ${d}d ${h}h ${m}m ${s}s until showtime`;
+  },1000);
+}
+
+</script>
+
+</body>
+</html>
